@@ -14,15 +14,13 @@ class Vampire {
     vampire.creator = this;
   }
 
-
   // Returns the total number of vampires created by that vampire
-
   get numberOfOffspring() {
     return this.offspring.length;
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
-   get numberOfVampiresFromOriginal() {
+  get numberOfVampiresFromOriginal() {
     let numberOfVampires = 0;
     let currentVampire = this;
     while (currentVampire.creator) {
@@ -57,6 +55,38 @@ class Vampire {
     }
     return currentVampire;
   }
-}
-module.exports = Vampire;
 
+  get totalDescendents() {
+    let total = 0;
+    for (let offspring of this.offspring) {
+      total += 1 + offspring.totalDescendents;
+    }
+    return total;
+  }
+
+  vampireWithName(name) {
+    if (this.name === name) {
+      return this;
+    }
+    for (let offspring of this.offspring) {
+      let result = offspring.vampireWithName(name);
+      if (result) {
+        return result;
+      }
+    }
+    return null;
+  }
+
+  get allMillennialVampires() {
+    let result = [];
+    if (this.yearConverted > 1980) {
+      result.push(this);
+    }
+    for (let offspring of this.offspring) {
+      result = result.concat(offspring.allMillennialVampires);
+    }
+    return result;
+  }
+}
+
+module.exports = Vampire;
